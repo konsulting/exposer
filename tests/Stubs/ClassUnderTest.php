@@ -25,4 +25,9 @@ class ClassUnderTest
     {
         return 'You called static: ' . $args[0];
     }
+
+    public function __get($property)
+    {
+        return 'You tried to get: ' . $property;
+    }
 }

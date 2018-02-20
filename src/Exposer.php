@@ -50,6 +50,10 @@ trait Exposer
      */
     public function __get($property)
     {
-        return $this->{substr($property, strlen(static::$classExposerPrefix))};
+        if (strpos($property, static::$classExposerPrefix) === 0) {
+            return $this->{substr($property, strlen(static::$classExposerPrefix))};
+        }
+
+        return parent::__get($property);
     }
 }

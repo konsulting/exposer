@@ -36,4 +36,10 @@ class ExposerTest extends TestCase
     {
         $this->assertEquals('You called static: arg1', (new ExposingClass)::notAMethod('arg1'));
     }
+
+    /** @test */
+    public function it_defers_to_parent_get_method()
+    {
+        $this->assertEquals('You tried to get: notAProperty', (new ExposingClass)->notAProperty);
+    }
 }
