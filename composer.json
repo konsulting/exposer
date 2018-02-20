@@ -1,0 +1,23 @@
+{
+  "name": "konsulting/exposer",
+  "require-dev": {
+    "phpunit/phpunit": "^7.0"
+  },
+  "authors": [
+    {
+      "name": "Robin D'Arcy",
+      "email": "robin@klever.co.uk"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Konsulting\\Exposer\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Konsulting\\Exposer\\Tests\\": "tests/"
+    }
+  }
+}
