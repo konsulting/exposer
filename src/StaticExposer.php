@@ -2,8 +2,6 @@
 
 namespace Konsulting\Exposer;
 
-use ReflectionClass;
-
 class StaticExposer
 {
     /**
@@ -21,6 +19,13 @@ class StaticExposer
         static::$subjectClass = $class;
     }
 
+    public static function invokeMethod($method, $args)
+    {
+        return BaseExposer::hasMethod(static::$subjectClass, $method)
+            ? BaseExposer::invokeStaticMethod(static::$subjectClass, $method, $args)
+            : call_user_func_array([static::$subjectClass, $method], $args);
+    }
+
     /**
      * Call a static method on the subject class.
      *
@@ -30,22 +35,13 @@ class StaticExposer
      */
     public static function __callStatic($method, $args)
     {
-        return BaseExposer::hasMethod(static::$subjectClass, $method)
-            ? static::invokeStaticMethod($method, $args)
-            : call_user_func_array([static::$subjectClass, $method], $args);
+        return static::invokeMethod($method, $args);
     }
 
-
-    /**
-     * @param string $method
-     * @param array  $args
-     * @return mixed
-     */
-    protected static function invokeStaticMethod($method, $args)
+    public static function getProperty($property)
     {
-        $reflectionMethod = new \ReflectionMethod(static::$subjectClass, $method);
-        $reflectionMethod->setAccessible(true);
-
-        return $reflectionMethod->invokeArgs(null, $args);
+        return BaseExposer::hasProperty(static::$subjectClass, $property)
+            ? BaseExposer::getProperty(static::$subjectClass, $property)
+            : call_user_func_array([static::$subjectClass, $method], $args);
     }
 }
