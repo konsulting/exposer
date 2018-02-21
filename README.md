@@ -67,7 +67,6 @@ $exposer->secret;                                   // 'My secret'
 $exposer->anotherSecret;                            // 'My static secret'
 
 // These methods are also available
-$exposer->hasMethod('add');                          // true
 $exposer->invokeMethod('add', [1, 1]);               // 2
 $exposer->getProperty('secret');                     // 'My secret'
 ```
@@ -90,7 +89,6 @@ StaticExposer::setClass(ClassUnderTest::class);
 StaticExposer::multiply(2, 2);                           // 4
 
 // These methods are also available
-StaticExposer::hasMethod('multiply');                      // true
 StaticExposer::invokeMethod('multiply', [2, 2]);          // 4
 StaticExposer::getProperty('anotherSecret');              // 'My static secret'
 ```
