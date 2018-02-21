@@ -6,8 +6,6 @@ use ReflectionClass;
 
 class Exposer
 {
-    protected static $subjectClass;
-
     /**
      * @var object
      */
@@ -34,16 +32,6 @@ class Exposer
     }
 
     /**
-     * Set the class name to use in a static context.
-     *
-     * @param string $class
-     */
-    public static function setClass($class)
-    {
-        static::$subjectClass = $class;
-    }
-
-    /**
      * Call a method on the subject class.
      *
      * @param string $method
@@ -55,22 +43,6 @@ class Exposer
         return $this->reflection->hasMethod($method)
             ? static::invokeMethod($this->reflection, $this->subject, $method, $args)
             : call_user_func_array([$this->subject, $method], $args);
-    }
-
-    /**
-     * Call a static method on the subject class.
-     *
-     * @param string $method
-     * @param array  $args
-     * @return mixed
-     */
-    public static function __callStatic($method, $args)
-    {
-        $reflection = new ReflectionClass(static::$subjectClass);
-
-        return $reflection->hasMethod($method)
-            ? static::invokeStaticMethod($reflection, $method, $args)
-            : call_user_func_array([static::$subjectClass, $method], $args);
     }
 
     /**
@@ -88,17 +60,6 @@ class Exposer
         $reflectionMethod->setAccessible(true);
 
         return $reflectionMethod->invokeArgs($subject, $args);
-    }
-
-    /**
-     * @param ReflectionClass $reflection
-     * @param string          $method
-     * @param array           $args
-     * @return mixed
-     */
-    protected static function invokeStaticMethod(ReflectionClass $reflection, $method, $args)
-    {
-        return static::invokeMethod($reflection, null, $method, $args);
     }
 
     public function __get($property)

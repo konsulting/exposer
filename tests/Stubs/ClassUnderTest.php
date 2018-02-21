@@ -6,6 +6,8 @@ class ClassUnderTest
 {
     protected $property = 'I am protected';
 
+    protected static $staticProperty = 'I am static protected';
+
     protected function protectedMethod($arg1, $arg2)
     {
         return $arg1 . $arg2;
@@ -18,7 +20,6 @@ class ClassUnderTest
 
     public function __call($method, $args)
     {
-        var_dump($args);
         return 'You called: ' . $args[0];
     }
 
