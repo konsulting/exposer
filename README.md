@@ -1,5 +1,8 @@
 # Exposer
 
+Although for the most part only public methods of classes are unit tested, it's sometimes necessary or helpful to have access to protected or private methods and properties.
+Exposer provides a convenient way to do this whilst keeping your tests clear and concise.
+
 ## Installation
 Install via Composer:
 ```
@@ -66,7 +69,7 @@ $exposer->multiply(2, 2);                           // 4
 $exposer->secret;                                   // 'My secret'
 $exposer->anotherSecret;                            // 'My static secret'
 
-// These methods are also available
+// These non-magic methods are also available
 $exposer->invokeMethod('add', [1, 1]);               // 2
 $exposer->getProperty('secret');                     // 'My secret'
 ```
@@ -88,7 +91,7 @@ StaticExposer::setClass(ClassUnderTest::class);
 
 StaticExposer::multiply(2, 2);                           // 4
 
-// These methods are also available
+// Non-magic methods
 StaticExposer::invokeMethod('multiply', [2, 2]);          // 4
 StaticExposer::getProperty('anotherSecret');              // 'My static secret'
 ```
