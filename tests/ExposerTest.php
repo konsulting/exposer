@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase;
 
 class ExposerTest extends TestCase
 {
+    /**
+     * @var Exposer
+     */
+    protected $exposer;
+
     protected function setUp()
     {
         parent::setUp();
