@@ -32,13 +32,6 @@ class StaticExposerTest extends TestCase
     /** @test */
     public function it_exposes_a_protected_property()
     {
-        $this->assertEquals('I am protected', StaticExposer::getProperty('property'));
-        $this->assertEquals('I am protected', StaticExposer::$property);
-    }
-
-    /** @test */
-    public function it_defers_to_parent_get_method()
-    {
-        $this->assertEquals('You tried to get: notAProperty', StaticExposer::$notAProperty);
+        $this->assertEquals('I am static protected', StaticExposer::getProperty('staticProperty'));
     }
 }
