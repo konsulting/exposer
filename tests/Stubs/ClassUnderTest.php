@@ -18,6 +18,7 @@ class ClassUnderTest
 
     public function __call($method, $args)
     {
+        var_dump($args);
         return 'You called: ' . $args[0];
     }
 

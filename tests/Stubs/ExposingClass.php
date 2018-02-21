@@ -2,9 +2,9 @@
 
 namespace Konsulting\Exposer\Tests\Stubs;
 
-use Konsulting\Exposer\Exposer;
+use Konsulting\Exposer\ExposerTrait;
 
 class ExposingClass extends ClassUnderTest
 {
-    use Exposer;
+    use ExposerTrait;
 }

@@ -2,58 +2,83 @@
 
 namespace Konsulting\Exposer;
 
-trait Exposer
+use ReflectionClass;
+
+class Exposer
 {
-    protected static $classExposerPrefix = '_expose_';
+    protected static $subjectClass;
 
     /**
-     * Proxy method call to parent to allow testing of protected methods.
-     *
-     * @param string $method
-     * @param array  $args
-     * @return mixed
+     * @var object
      */
+    protected $subject;
+
+    /**
+     * @var ReflectionClass
+     */
+    protected $reflection;
+
+    public function __construct($subject)
+    {
+        $this->subject = $subject;
+        $this->reflection = new ReflectionClass($subject);
+    }
+
+    /**
+     * @param object $subject
+     * @return static
+     */
+    public static function make($subject)
+    {
+        return new static($subject);
+    }
+
+    public static function setClass($class)
+    {
+        static::$subjectClass = $class;
+    }
+
     public function __call($method, $args)
     {
-        if (strpos($method, static::$classExposerPrefix) === 0) {
-            $parentMethod = substr($method, strlen(static::$classExposerPrefix));
-
-            return parent::{$parentMethod}(...$args);
-        }
-
-        return parent::__call($method, $args);
+        return $this->reflection->hasMethod($method)
+            ? static::invokeMethod($this->reflection, $this->subject, $method, $args)
+            : call_user_func_array([$this->subject, $method], $args);
     }
 
-    /**
-     * Proxy method call to parent to allow testing of static protected methods.
-     *
-     * @param string $method
-     * @param array  $args
-     * @return mixed
-     */
     public static function __callStatic($method, $args)
     {
-        if (strpos($method, static::$classExposerPrefix) === 0) {
-            $parentMethod = substr($method, strlen(static::$classExposerPrefix));
+        $reflection = new ReflectionClass(static::$subjectClass);
 
-            return parent::{$parentMethod}(...$args);
-        }
-
-        return parent::__callStatic($method, $args);
+        return $reflection->hasMethod($method)
+            ? static::invokeStaticMethod($reflection, $method, $args)
+            : call_user_func_array([static::$subjectClass, $method], $args);
     }
 
     /**
-     * Expose protected properties.
+     * Invoke a method on the subject class, regardless of its visibility.
      *
-     * @param string $property
+     * @param ReflectionClass $reflection
+     * @param object|null     $subject
+     * @param string          $method
+     * @param array           $args
      * @return mixed
      */
-    public function __get($property)
+    protected static function invokeMethod(ReflectionClass $reflection, $subject, $method, $args)
     {
-        if (strpos($property, static::$classExposerPrefix) === 0) {
-            return $this->{substr($property, strlen(static::$classExposerPrefix))};
-        }
+        $reflectionMethod = $reflection->getMethod($method);
+        $reflectionMethod->setAccessible(true);
 
-        return parent::__get($property);
+        return $reflectionMethod->invokeArgs($subject, $args);
+    }
+
+    /**
+     * @param ReflectionClass $reflection
+     * @param string          $method
+     * @param array           $args
+     * @return mixed
+     */
+    protected static function invokeStaticMethod(ReflectionClass $reflection, $method, $args)
+    {
+        return static::invokeMethod($reflection, null, $method, $args);
     }
 }
