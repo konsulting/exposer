@@ -2,8 +2,6 @@
 
 namespace Konsulting\Exposer;
 
-use ReflectionClass;
-
 class Exposer
 {
     /**
@@ -12,17 +10,18 @@ class Exposer
     protected $subject;
 
     /**
-     * @var ReflectionClass
+     * Exposer constructor.
+     *
+     * @param $subject
      */
-    protected $reflection;
-
     public function __construct($subject)
     {
         $this->subject = $subject;
-        $this->reflection = new ReflectionClass($subject);
     }
 
     /**
+     * Construct a new instance for the subject.
+     *
      * @param object $subject
      * @return static
      */
@@ -32,7 +31,21 @@ class Exposer
     }
 
     /**
-     * Call a method on the subject class.
+     * Call a method on the subject.
+     *
+     * @param string $method
+     * @param array  $args
+     * @return mixed
+     */
+    public function invokeMethod($method, $args)
+    {
+        return BaseExposer::hasMethod($this->subject, $method)
+            ? BaseExposer::invokeMethod($this->subject, $method, $args)
+            : call_user_func_array([$this->subject, $method], $args);
+    }
+
+    /**
+     * Call a method on the subject.
      *
      * @param string $method
      * @param array  $args
@@ -40,32 +53,19 @@ class Exposer
      */
     public function __call($method, $args)
     {
-        return $this->reflection->hasMethod($method)
-            ? static::invokeMethod($this->reflection, $this->subject, $method, $args)
-            : call_user_func_array([$this->subject, $method], $args);
+        return $this->invokeMethod($method, $args);
     }
 
     /**
-     * Invoke a method on the subject class, regardless of its visibility.
+     * Get a property on the subject.
      *
-     * @param ReflectionClass $reflection
-     * @param object|null     $subject
-     * @param string          $method
-     * @param array           $args
+     * @param string $property
      * @return mixed
      */
-    protected static function invokeMethod(ReflectionClass $reflection, $subject, $method, $args)
+    public function getProperty($property)
     {
-        $reflectionMethod = $reflection->getMethod($method);
-        $reflectionMethod->setAccessible(true);
-
-        return $reflectionMethod->invokeArgs($subject, $args);
-    }
-
-    public function __get($property)
-    {
-        return $this->reflection->hasProperty($property)
-            ? $this->getProperty($property)
+        return BaseExposer::hasProperty($this->subject, $property)
+            ? BaseExposer::getProperty($this->subject, $property)
             : $this->subject->{$property};
     }
 
@@ -75,11 +75,8 @@ class Exposer
      * @param string $property
      * @return mixed
      */
-    protected function getProperty($property)
+    public function __get($property)
     {
-        $reflectionProperty = $this->reflection->getProperty($property);
-        $reflectionProperty->setAccessible(true);
-
-        return $reflectionProperty->getValue($this->subject);
+        return $this->getProperty($property);
     }
 }

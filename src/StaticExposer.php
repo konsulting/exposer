@@ -30,7 +30,7 @@ class StaticExposer
      */
     public static function __callStatic($method, $args)
     {
-        return (new ReflectionClass(static::$subjectClass))->hasMethod($method)
+        return BaseExposer::hasMethod(static::$subjectClass, $method)
             ? static::invokeStaticMethod($method, $args)
             : call_user_func_array([static::$subjectClass, $method], $args);
     }
