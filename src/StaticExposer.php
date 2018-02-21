@@ -19,6 +19,13 @@ class StaticExposer
         static::$subjectClass = $class;
     }
 
+    /**
+     * Call a static method on the subject class.
+     *
+     * @param string $method
+     * @param array  $args
+     * @return mixed
+     */
     public static function invokeMethod($method, $args)
     {
         return BaseExposer::hasMethod(static::$subjectClass, $method)
