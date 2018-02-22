@@ -74,24 +74,16 @@ $exposer->invokeMethod('add', [1, 1]);               // 2
 $exposer->getProperty('secret');                     // 'My secret'
 ```
 
-**Note:** Static methods and properties are available from an instance context, but of course non-static methods and properties are not available from a static context.
-
-### Static Exposer
-In a similar way, the `StaticExposer` class allows access to a class's static methods and properties without the need to provide an instance.
-The target class name is set via the `setClass()` static method.
-
-***Note:*** Because there is no `__getStatic()` method in PHP, only methods may be accessed magically.
-Properties must be accessed with the `getProperty()` method.
+Exposer can also access class's static methods and properties without the need to provide an instance.
 ```php
 <?php
 
-use Konsulting\Exposer\StaticExposer;
+use Konsulting\Exposer\Exposer;
 
-StaticExposer::setClass(ClassUnderTest::class);
+$exposer = Exposer::make(ClassUnderTest::class);
 
-StaticExposer::multiply(2, 2);                           // 4
-
-// Non-magic methods
-StaticExposer::invokeMethod('multiply', [2, 2]);          // 4
-StaticExposer::getProperty('anotherSecret');              // 'My static secret'
+$exposer->multiply(2, 2);                           // 4
+$exposer->anotherSecret;                            // 'My static secret'
 ```
+
+**Note:** Static methods and properties are available from an instance context, but of course non-static methods and properties are not available from a static context.
