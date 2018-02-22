@@ -12,7 +12,7 @@ class Exposer
     /**
      * Exposer constructor.
      *
-     * @param $subject
+     * @param object|string $subject
      */
     public function __construct($subject)
     {
@@ -22,7 +22,7 @@ class Exposer
     /**
      * Construct a new instance for the subject.
      *
-     * @param object $subject
+     * @param object|string $subject
      * @return static
      */
     public static function make($subject)

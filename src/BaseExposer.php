@@ -35,29 +35,27 @@ class BaseExposer
     /**
      * Invoke a method on the subject class.
      *
-     * @param object $subject The subject instance.
-     * @param string $method  The name of the method.
-     * @param array  $args    The arguments to pass to the method.
+     * @param object|string $subject The subject instance or class name.
+     * @param string        $method  The name of the method.
+     * @param array         $args    The arguments to pass to the method.
      * @return mixed
      */
     public static function invokeMethod($subject, $method, $args)
     {
         return static::getReflectionMethod($subject, $method)
-            ->invokeArgs($subject, $args);
+            ->invokeArgs(static::getInvocationSubject($subject), $args);
     }
 
     /**
-     * Invoke a static method on the subject class.
+     * When calling a static method, null must be passed to ReflectionMethod::invokeArgs() rather than the string class
+     * name.
      *
-     * @param string $subject The subject class name.
-     * @param string $method  The name of the method.
-     * @param array  $args    The arguments to pass to the method.
-     * @return mixed
+     * @param object|string $subject
+     * @return object|null
      */
-    public static function invokeStaticMethod($subject, $method, $args)
+    protected static function getInvocationSubject($subject)
     {
-        return static::getReflectionMethod($subject, $method)
-            ->invokeArgs(null, $args);
+        return is_string($subject) ? null : $subject;
     }
 
     /**

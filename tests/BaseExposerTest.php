@@ -35,7 +35,7 @@ class BaseExposerTest extends TestCase
     public function it_exposes_a_protected_static_method()
     {
         $this->assertEquals('arg1arg2',
-            BaseExposer::invokeStaticMethod(new ClassUnderTest, 'protectedStaticMethod', ['arg1', 'arg2']));
+            BaseExposer::invokeMethod(ClassUnderTest::class, 'protectedStaticMethod', ['arg1', 'arg2']));
     }
 
     /** @test */
