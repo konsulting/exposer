@@ -46,7 +46,7 @@ BaseExposer::getProperty(new ClassUnderTest, 'secret');                     // '
 
 // Static context
 BaseExposer::hasMethod(ClassUnderTest::class, 'multiply');                  // true
-BaseExposer::invokeStaticMethod(ClassUnderTest::class, 'multiply', [2,2]);  // 4
+BaseExposer::invokeMethod(ClassUnderTest::class, 'multiply', [2,2]);        // 4
 BaseExposer::getProperty(ClassUnderTest::class, 'anotherSecret');           // 'My static secret'
 ```
 
